@@ -19,10 +19,12 @@ function Navbar()
 
                 <div>
                     <Circle className = "circle active"/>
-                    <div className = {location.pathname === "/confirm" || location.pathname === "/email" ? "divider active" : "divider"}></div>
-                    <Circle className = {location.pathname === "/confirm" || location.pathname === "/email" ? "circle active" : "circle"}/>
-                    <div className = {location.pathname === "/email" ? "divider active" : "divider"}></div>
-                    <Circle className = {location.pathname === "/email" ? "circle active" : "circle"}/>
+                    <div className = {location.pathname === "/confirm" || location.pathname === "/email" || location.pathname === "/personal" ? "divider active" : "divider"}></div>
+                    <Circle className = {location.pathname === "/confirm" || location.pathname === "/email" || location.pathname === "/personal" ? "circle active" : "circle"}/>
+                    <div className = {location.pathname === "/email" || location.pathname === "/personal" ? "divider active" : "divider"}></div>
+                    <Circle className = {location.pathname === "/email" || location.pathname === "/personal" ? "circle active" : "circle"}/>
+                    <div className = {location.pathname === "/personal" ? "divider active" : "divider"}></div>
+                    <Circle className = {location.pathname === "/personal" ? "circle active" : "circle"}/>
                 </div>
 
                 <div>

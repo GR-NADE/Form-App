@@ -1,11 +1,15 @@
 import { useRef, useEffect, useState } from 'react';
 import { updateContainerWidth } from '../../utils/updateWidth'; // imports function to adjust container width reponsively
+import { useNavigate } from 'react-router-dom';
 import { Check, Eye, EyeOff, AlertCircle } from "lucide-react";
+import { db } from "../../firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 function Email()
 {
     const containerRef = useRef(null);
-    const storedPhone = localStorage.getItem("userPhone");
+    const storedPhone = sessionStorage.getItem("userPhone");
+    const navigate = useNavigate();
     
     const [showPassword, setShowPassword] = useState(false);
 
@@ -28,14 +32,22 @@ function Email()
         return () => window.removeEventListener('resize', handleResize); // cleanup listener on unmount
     }, []);
 
-    // validates user input and stores email and password if all conditions are met.
-    const handleRegister = () => {
+    // validates user email (format and uniqueness) and password strength.
+    const handleRegister = async () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         setEmailError("");
         setPasswordError("");
 
-        if (email.trim() === "")
+        if (!storedPhone)
+        {
+            setTimeout(() => {
+                alert(`Session expired. Please restart the registration process.`);
+                navigate("/");
+            }, 2000);
+            return;
+        }
+        else if (email.trim() === "")
         {
             setEmailError("Please enter your email address.");
         }
@@ -43,22 +55,43 @@ function Email()
         {
             setEmailError("Please enter a valid email address.");
         }
-        else if (password.trim() === "")
-        {
-            setPasswordError("Password field cannot be empty.");
-        }
-        else if (password.length < 6)
-        {
-            setPasswordError("Password must be at least 6 characters.");
-        }
-        else if (!/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password))
-        {
-            setPasswordError("Password must include uppercase, lowercase, and a number.");
-        }
         else
         {
-            localStorage.setItem("userEmail", email);
-            localStorage.setItem("userPassword", password);
+            try
+            {
+                const usersRef = collection(db, "users");
+                const q = query(usersRef, where("email", "==", email));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty)
+                {
+                    setEmailError("Email already in use.");
+                    return;
+                }
+                else if (password.trim() === "")
+                {
+                    setPasswordError("Password field cannot be empty.");
+                }
+                else if (password.length < 6)
+                {
+                    setPasswordError("Password must be at least 6 characters.");
+                }
+                else if (!/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password))
+                {
+                    setPasswordError("Password must include uppercase, lowercase, and a number.");
+                }
+                else
+                {
+                    sessionStorage.setItem("userEmail", email);
+                    sessionStorage.setItem("userPassword", password);
+                    navigate("/personal");
+                }
+            }
+            catch (err)
+            {
+                console.error("Error checking email in database: ", err);
+                setError("Something went wrong. Please try again.");
+            }
         }
     }
 

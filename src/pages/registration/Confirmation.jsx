@@ -6,10 +6,9 @@ import { RefreshCcw, Phone, AlertCircle } from 'lucide-react';
 function Confirmation()
 {
     const containerRef = useRef(null);
-    const storedPhone = localStorage.getItem("userPhone");
+    const storedPhone = sessionStorage.getItem("userPhone");
     const [code, setCode] = useState("");
     const [confirmationCode, setConfirmationCode] = useState("");
-    const [isInputFocused, setIsInputFocused] = useState(false);
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
@@ -36,9 +35,16 @@ function Confirmation()
         setError("");
     };
 
+    // generate a 5-digit confirmation code on mount and display it to the user via alert when the page is loaded
     useEffect(() => {
-        // generate random 5-digit confirmation code and alert it on mount
-        generateCode();
+        const newCode = Math.floor(10000 + Math.random() * 90000).toString();
+        setConfirmationCode(newCode);
+
+        const timer = setTimeout(() => {
+            alert(`Your confirmation code is : ${newCode}`);
+        }, 2000);
+
+        return () => clearTimeout(timer);
     }, []);
 
     // handles code input to allow only numeric data, up to 5 digits
@@ -54,7 +60,14 @@ function Confirmation()
 
     // checks that the inputted code is correct, and sets error messages accordingly if not
     const handleConfirm = () => {
-        if (code.length == 0)
+        if (!storedPhone)
+        {
+            setTimeout(() => {
+                alert(`Session expired. Please restart the registration process.`);
+                navigate("/");
+            }, 2000);
+        }
+        else if (code.length == 0)
         {
             setError("Please input confirmation code.");
         }
@@ -96,20 +109,18 @@ function Confirmation()
                             inputMode = "numeric"
                             value = {code}
                             onChange = {handleInput}
-                            onFocus = {() => setIsInputFocused(true)}
-                            onBlur = {() => setIsInputFocused(false)}
                         />
-                        {(isInputFocused || error) && (
-                            <h4 className = {error ? "err-msg" : "def-msg"}>
-                                {error ? (
-                                    <>
-                                        <AlertCircle className = "err"/>
-                                        {error}
-                                    </>
-                                ) : (
-                                    isInputFocused && "Confirm phone number with received code from sms message"
-                                )}
+                        {error ? (
+                            <h4 className = "err-msg">
+                                <AlertCircle className = "err"/>
+                                {error}
                             </h4>
+                        ) : (
+                            !code && (
+                                <h4 className = "def-msg">
+                                    Confirm phone number with received code from sms message
+                                </h4>
+                            )
                         )}
                     </div>
                     

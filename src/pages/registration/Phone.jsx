@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, X, AlertCircle } from 'lucide-react';
 import { updateContainerWidth } from '../../utils/updateWidth'; // imports function to adjust container width reponsively
+import { db } from "../../firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 // list of valid phone number prefixes
 const validPrefixes = [
@@ -42,8 +44,8 @@ function Phone()
         }
     };
 
-    // checks phone number prefix and length, sets error messages accordingly, and stores the valid phone number
-    const handleSendCode = () => {
+    // checks phone number validation and uniqueness
+    const handleSendCode = async () => {
         const prefix = phone.slice(0, 3);
         const isValidPrefix = validPrefixes.includes(prefix);
 
@@ -53,7 +55,7 @@ function Phone()
         }
         else if (phone.length < 10)
         {
-            setError("Phone Number must be exactly 10 digits.");
+            setError("Phone number must be exactly 10 digits.");
         }
         else if (!isValidPrefix)
         {
@@ -61,9 +63,27 @@ function Phone()
         }
         else
         {
-            setError("");
-            localStorage.setItem("userPhone", phone);
-            navigate("/confirm");
+            try
+            {
+                const usersRef = collection(db, "users");
+                const q = query(usersRef, where("phone", "==", phone));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty)
+                {
+                    setError("This number is already registered.");
+                    return;
+                }
+
+                setError("");
+                sessionStorage.setItem("userPhone", phone);
+                navigate("/confirm");
+            }
+            catch (err)
+            {
+                console.error("Error checking phone in database: ", err);
+                setError("Something went wrong. Please try again.");
+            }
         }
     };
 
@@ -103,12 +123,12 @@ function Phone()
                         <input type = "text" placeholder = "XXX-XXX-XXXX" inputMode = "numeric" value = {phone} onChange = {handleInput}/>
                     </div>
                 </div>
-                {error && 
-                    <div>
+                {error && (
+                    <h4 className = "err-msg">
                         <AlertCircle className = "err"/>
-                        <h4 className = "err-msg">{error}</h4>
-                    </div>
-                }
+                        {error}
+                    </h4>
+                )}
             </div>
             
             <p onClick = {handleSendCode}>Send Code</p>

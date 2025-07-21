@@ -5,8 +5,9 @@ import './App.css';
 import Navbar from './components/Navbar';
 
 import LandingPage from './pages/registration/Phone';
-import NumConfirm from './pages/registration/Confirmation';
+import Confirm from './pages/registration/Confirmation';
 import Email from './pages/registration/Email';
+import Personal from './pages/registration/Personal';
 
 function App()
 {
@@ -16,8 +17,9 @@ function App()
 
 			<Routes>
 				<Route path = "/" element = {<LandingPage/>}/>
-				<Route path = "/confirm" element = {<NumConfirm/>}/>
+				<Route path = "/confirm" element = {<Confirm/>}/>
 				<Route path = "/email" element = {<Email/>}/>
+				<Route path = "/personal" element = {<Personal/>}/>
 			</Routes>
 		</Router>
 	)

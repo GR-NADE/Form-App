@@ -95,6 +95,11 @@ body
     background-color: var(--light-gray);
 }
 
+.nav-container div:nth-child(3)
+{
+    display: flex;
+}
+
 .nav-container div:nth-child(3) .cancel:hover
 {
     color: var(--gray);
@@ -178,7 +183,7 @@ body
     padding: 1.56rem;
     border: 1px solid var(--light-gray);
     border-radius: 5px;
-    row-gap: 10px;
+    row-gap: 5px;
 }
 
 .container .input div:nth-child(1)
@@ -210,7 +215,7 @@ body
     font-size: 1rem;
     letter-spacing: .5px;
     border: none;
-    border-bottom: 1px solid var(--very-light-gray);
+    border-bottom: 1px solid var(--light-gray);
 }
 
 .container .input div:nth-child(1) div input:nth-child(1)
@@ -226,36 +231,32 @@ body
     outline: none;
 }
 
+.container .input div:nth-child(1) div input:nth-child(2)::placeholder
+{
+    color: var(--medium-gray);
+}
+
 .container .input div:nth-child(1) div input:nth-child(2):focus
 {
-    border-color: var(--light-gray);
+    border-color: var(--medium-gray);
 }
 
-.container .input div:nth-child(2)
+.container .err-msg
 {
     display: flex;
-    flex-direction: row;
     align-items: center;
-    column-gap: 5px;
-}
-
-.container .input div:nth-child(2) .err-msg,
-.container .input div:nth-child(2) .err
-{
+    font-family: var(--poppins);
+    font-size: 13px;
+    font-weight: 400;
     color: var(--vivid-red);
+    column-gap: 5px;
+    line-height: 1;
 }
 
-.container .input div:nth-child(2) .err
+.container .err-msg .err
 {
     width: 13px;
     flex-shrink: 0;
-}
-
-.container .input div:nth-child(2) .err-msg
-{
-    font-family: var(--roboto);
-    font-size: 13px;
-    font-weight: 400;
 }
 
 .container p
@@ -301,7 +302,8 @@ body
 }
 
 .container .number div h4:nth-child(2),
-.container .confirm h4
+.container .confirm h4:nth-child(1),
+.container .confirm .func div:nth-child(1) .def-msg
 {
     font-family: var(--poppins);
     font-size: 14px;
@@ -340,11 +342,6 @@ body
     row-gap: 5px;
 }
 
-.container .confirm .func div:nth-child(1) h4
-{
-    font-size: 13px;
-}
-
 .container .confirm .func div:nth-child(1) input
 {
     width: 100%;
@@ -365,27 +362,13 @@ body
 {
     font-size: 1.2rem;
     letter-spacing: 7px;
-    color: var(--very-light-gray);
+    color: var(--light-gray);
 }
 
 .container .confirm .func div:nth-child(1) .def-msg
 {
+    font-size: 13px;
     color: var(--dark-gray);
-}
-
-.container .confirm .func div:nth-child(1) .err-msg
-{
-    display: flex;
-    align-items: center;
-    font-weight: 400;
-    color: var(--vivid-red);
-    column-gap: 5px;
-}
-
-.container .confirm .func div:nth-child(1) .err
-{
-    width: 13px;
-    flex-shrink: 0;
 }
 
 .container .confirm .func div:nth-child(2)
@@ -394,6 +377,11 @@ body
     align-items: center;
     color: var(--royal-blue);
     column-gap: 5px;
+}
+
+.container .confirm .func div:nth-child(2):hover
+{
+    cursor: pointer;
 }
 
 .container .confirm .func div:nth-child(2) .refresh
@@ -472,9 +460,7 @@ body
 }
 
 .container .usr-inpt .mail h4:nth-child(1),
-.container .usr-inpt .mail .err-msg,
-.container .usr-inpt .passw h4:nth-child(1),
-.container .usr-inpt .passw .err-msg
+.container .usr-inpt .passw h4:nth-child(1)
 {
     font-family: var(--poppins);
     font-size: 14px;
@@ -484,7 +470,7 @@ body
 .container .usr-inpt .mail input,
 .container .usr-inpt .passw div input
 {
-    margin-top: 15px;
+    margin-top: 10px;
     padding: 0 0 7px 10px;
     font-size: 1rem;
     font-family: var(--roboto);
@@ -493,21 +479,16 @@ body
     outline: none;
 }
 
-.container .usr-inpt .mail .err-msg,
-.container .usr-inpt .passw .err-msg
+.container .usr-inpt .mail input::placeholder,
+.container .usr-inpt .passw div input::placeholder
 {
-    display: flex;
-    align-items: center;
-    font-size: 13px;
-    color: var(--vivid-red);
-    column-gap: 5px;
+    color: var(--medium-gray);
 }
 
-.container .usr-inpt .mail .err-msg .err,
-.container .usr-inpt .passw .err-msg .err
+.container .usr-inpt .mail input:focus,
+.container .usr-inpt .passw div input:focus
 {
-    width: 13px;
-    flex-shrink: 0;
+    border-color: var(--medium-gray);
 }
 
 .container .usr-inpt .passw div
@@ -548,11 +529,117 @@ body
     border-color: var(--royal-blue);
 }
 
+.container .reg-btn:hover
+{
+    border-color: var(--royal-blue);
+    transform: scale(1.009);
+}
+
+
+/* REG (PERSONAL) */
+
+.container .body,
+.container .body .sub-header,
+.container .body .usr-info,
+.container .body .usr-info .name,
+.container .body .usr-info .birth-info div
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.container .body,
+.container .body .usr-info
+{
+    row-gap: 25px;
+}
+
+.container .body
+{
+    padding: 30px;
+    border: 1px solid var(--light-gray);
+    border-radius: 5px;
+}
+
+.container .body .sub-header h2
+{
+    font-family: var(--poppins);
+    font-size: 1.12rem;
+    font-weight: 600;
+}
+
+.container .body .sub-header h4
+{
+    font-family: var(--roboto);
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--dark-gray);
+}
+
+.container .body .usr-info .name,
+.container .body .usr-info .birth-info div
+{
+    row-gap: 5px;
+}
+
+.container .body .usr-info .name h4:nth-child(1),
+.container .body .usr-info .birth-info div h4
+{
+    font-family: var(--poppins);
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.container .body .usr-info .name input,
+.container .body .usr-info .birth-info div input
+{
+    margin-top: 10px;
+    padding: 0 0 7px 10px;
+    font-size: 1rem;
+    font-family: var(--roboto);
+    border: none;
+    border-bottom: 1px solid var(--light-gray);
+    outline: none;
+}
+
+.container .body .usr-info .name input:focus,
+.container .body .usr-info .birth-info div input:focus
+{
+    border-color: var(--medium-gray);
+}
+
+.container .body .usr-info .birth-info
+{
+    display: flex;
+    justify-content: space-between;
+}
+
+.container .body .usr-info .birth-info div
+{
+    width: 45%;
+}
+
+.container .body .usr-info .birth-info div input::placeholder
+{
+    color: var(--medium-gray);
+}
+
 
 /* MEDIA QUERY */
 @media (max-width: 500px)
 {
     /* NAVBAR */
+    .nav-container
+    {
+        flex-direction: column;
+        row-gap: 25px;
+    }
+
+    .nav-container div:nth-child(1)
+    {
+        align-self: flex-start;
+    }
+
     .nav-container div:nth-child(3)
     {
         display: none;
@@ -635,5 +722,25 @@ body
     {
         padding: 0 20px;
         border: none;
+    }
+
+
+    /* REG (PERSONAL) */
+    .container .body
+    {
+        border: none;
+        border-top: 1px solid var(--light-gray);
+        border-radius: 0;
+    }
+
+    .container .body .usr-info .birth-info
+    {
+        flex-direction: column;
+        row-gap: 25px;
+    }
+
+    .container .body .usr-info .birth-info div
+    {
+        width: 100%;
     }
 }
